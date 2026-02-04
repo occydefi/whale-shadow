@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const crypto = require("crypto");
+const ai = require("./ai");
 
 const app = express();
 const PORT = 3022;
@@ -242,6 +243,35 @@ app.post("/api/alerts/create", (req, res) => {
     alert,
     message: "Alert created! You will be notified when whale moves."
   });
+});
+
+// AI-powered endpoints
+app.get("/api/ai/analyze-whale/:address", async (req, res) => {
+  try {
+    const whale = whales.get(req.params.address);
+    if (!whale) return res.status(404).json({ error: "Whale not found" });
+    const analysis = await ai.analyzeWhale(whale);
+    res.json({ success: true, address: req.params.address, analysis });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post("/api/ai/predict-move", async (req, res) => {
+  try {
+    const { address } = req.body;
+    const whale = whales.get(address);
+    if (!whale) return res.status(404).json({ error: "Whale not found" });
+    const moves = (whale.recentTrades || []).map(t => t.type + " " + t.token + " $" + t.amount).join(", ");
+    const prediction = await ai.predictMove(address, moves || "No recent trades");
+    res.json({ success: true, address, prediction });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post("/api/ai/alert-analysis", async (req, res) => {
+  try {
+    const alertData = req.body;
+    const analysis = await ai.alertAnalysis(alertData);
+    res.json({ success: true, analysis });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // Seed demo
