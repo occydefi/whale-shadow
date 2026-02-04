@@ -276,6 +276,15 @@ app.post("/api/ai/alert-analysis", async (req, res) => {
 
 // Seed demo
 function seedDemo() {
+  // Pre-populate whales so AI endpoints work immediately
+  const demoWhales = [
+    { address: "Wha1e111111111111111111111111111111111111111", alias: "SOL Mega Whale", balance: 2500000, token: "SOL", lastActivity: new Date(Date.now() - 3600000).toISOString(), last5Moves: ["BUY", "HOLD", "BUY", "SELL", "BUY"], avgTradeSize: 50000, accuracy: "72%", followers: 1234 },
+    { address: "Wha1e222222222222222222222222222222222222222", alias: "DeFi Degen", balance: 890000, token: "SOL", lastActivity: new Date(Date.now() - 1800000).toISOString(), last5Moves: ["SELL", "SELL", "BUY", "SELL", "BUY"], avgTradeSize: 25000, accuracy: "65%", followers: 567 },
+    { address: "Wha1e333333333333333333333333333333333333333", alias: "NFT Flipper King", balance: 450000, token: "SOL", lastActivity: new Date(Date.now() - 7200000).toISOString(), last5Moves: ["BUY", "BUY", "BUY", "SELL", "HOLD"], avgTradeSize: 15000, accuracy: "58%", followers: 890 },
+    { address: "Wha1e444444444444444444444444444444444444444", alias: "Mysterious Accumulator", balance: 5000000, token: "SOL", lastActivity: new Date(Date.now() - 300000).toISOString(), last5Moves: ["BUY", "BUY", "BUY", "BUY", "BUY"], avgTradeSize: 100000, accuracy: "85%", followers: 3456 }
+  ];
+  demoWhales.forEach(w => whales.set(w.address, w));
+
   const demo = {
     id: "demo-whale-prediction",
     whaleAddress: "Wha1e444444444444444444444444444444444444444",
